@@ -1,0 +1,42 @@
+[ui]
+username = David Stanek <dstanek@dstanek.com>
+ssh = ssh -C
+merge = vimdiff
+ignore = ~/.hgignore
+
+[defaults]
+outgoing = --graph
+incoming = --graph
+diff = -p
+qnew = -D
+qrefresh = -D
+commit = -v
+
+[diff]
+git = 1
+showfunc = 1
+unified = 8
+nodates = 1
+
+[extensions]
+hgext.mq =
+hgext.pager =
+hgext.graphlog =
+hgext.convert =
+hgext.color =
+hgext.rebase =
+hgext.fetch =
+hggit =
+#hgsubversion =
+
+[alias]
+qstatus = status --rev -2:.
+
+[pager]
+pager = LESS="FRX" less
+quiet = True
+attend = diff,status,log,qdiff,blame,annotate,pdiff,qlog,incoming,outgoing
+
+[merge-tools]
+vimdiff.executable = vim
+vimdiff.args = -d $base $local $output $other +close +close

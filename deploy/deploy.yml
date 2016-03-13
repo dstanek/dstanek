@@ -11,11 +11,13 @@
     - name: Get my group
       command: "id -g -n {{ local_user }}"
       register: local_group_cmd
+      changed_when: false
     - name: Get source directory
       command: pwd
       args:
           chdir: "{{ playbook_dir }}/.."
       register: pwd_cmd
+      changed_when: false
     - name: Create dotfile symlinks
       file:
         dest: "{{ local_home }}/{{ item }}"
@@ -26,19 +28,17 @@
         group: "{{ local_group_cmd.stdout }}"
       with_items:
         # shell
-    #    - .zshrc
-    #    - .zsh.custom
-    #    - .shell
+        - .zshrc
+        - .zshenv
+        - .shell
         # misc
         - .ansible.cfg
         - .ctags
         - .tmux.conf
-    #    - .weechat
-    #    # scripts
-    #    - bin
+        - .weechat
+        # scripts
+        - bin
         # vcs
-    #    - .gitconfig
-    #    - .git_template
-    #    - .global_gitignore
-    #    - .hgignore
-    #    - .hgrc
+        - .gitconfig
+        - .git_template
+        - .gitignore_global

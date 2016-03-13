@@ -1,0 +1,6 @@
+#!/bin/bash
+
+Xnest :1 -ac -name GIMP -geometry 1440x900 &
+tinywm --display :1 &
+#metacity --display :1 &
+gimp --display :1

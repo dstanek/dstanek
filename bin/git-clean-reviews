@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Copyright 2016 David Stanek <dstanek@dstanek.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+current_branch=`git branch | grep '\*' | sed 's/\* //'`
+
+
+function _delete_branch {
+    branch=$1
+    branch_sha=`git rev-parse $branch`
+    if [[ "$branch" != "$current_branch" ]]; then
+        while true; do
+            read -p "Can I delete branch $branch ($branch_sha)? " yn
+            case $yn in
+                [Yy]* ) git branch -D $branch; break;;
+                [Nn]* ) echo skipping; break;;
+            esac
+        done
+    fi
+}
+
+function _did_i_hack {
+    branch=$1
+    format="Author: %an <%ae>\nCommitter: %cn <%ce>"
+    author=`git --no-pager show -s --format="$format" $branch`
+    echo $author
+    if [[ $author == *dstanek* ]]; then
+        return 0
+    fi
+    return 1
+}
+
+function main {
+    for branch in `git branch --merged | sed 's/\*//'`; do
+        _delete_branch $branch
+    done
+    for branch in `git branch | sed 's/\*//'`; do
+        if [[ "$branch" == review/* ]]; then
+            if _did_i_hack $branch; then
+                echo "You touched $branch; *NOT* deleting"
+            else
+                _delete_branch $branch
+            fi
+        fi
+    done
+}
+
+
+main

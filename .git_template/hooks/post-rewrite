@@ -1,0 +1,6 @@
+#!/bin/sh
+
+case "$1" in
+    # covers the 'git commit --amend' case
+    rebase) exec .git/hooks/post-merge ;;
+esac

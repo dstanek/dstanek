@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# source: https://gist.github.com/dolph/6369538
+
+BRANCH=${1:-master}
+git checkout $BRANCH
+git pull
+git checkout $BRANCH~0
+find . -name "*.pyc" -exec rm -rf {} \;
+git status

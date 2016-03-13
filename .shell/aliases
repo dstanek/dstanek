@@ -1,0 +1,24 @@
+# zsh shell aliases
+
+alias mq='hg -R $(hg root)/.hg/patches'
+alias j='jobs'
+alias g='git'
+alias c='clear'
+alias v='vim'
+alias gv='gvim'
+alias -g L='| less'
+alias -g NUL='> /dev/null 2>&1'
+alias -g S='| sort'
+alias -g TF='| tail -f'
+alias -g X='| xargs'
+
+alias pb='pythonbrew'
+
+alias ppjson='python -m json.tool'
+
+if [[ $(uname) = 'Darwin' ]]; then
+    alias vi='mvim'
+    alias vim='mvim'
+fi
+
+alias v=runvim

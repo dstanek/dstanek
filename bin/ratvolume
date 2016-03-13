@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# script to adjust volume - useful in ratpoison
+
+if [[ $1 == "up" ]]; then
+    amixer set Master 10%+ > /dev/null
+    echo Volume $1 to $(amixer get Master | grep "^  Front Left" | sed "s/.*\[\([0-9]*\)%\].*/\1%/")
+elif [[ $1 == "down" ]]; then
+    amixer set Master 10%- > /dev/null
+    echo Volume $1 to $(amixer get Master | grep "^  Front Left" | sed "s/.*\[\([0-9]*\)%\].*/\1%/")
+fi

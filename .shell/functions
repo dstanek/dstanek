@@ -1,0 +1,57 @@
+# zsh shell functions
+
+# make a directory and cd into it
+function mcd { mkdir -p $1; cd $1; }
+
+function load_rvm {
+    [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm";
+    rvm use 1.9.3-p125
+}
+
+# load Android development environment
+function load_android {
+    ANDROID_SDK=~/Projects/android-sdk-macosx
+    export PATH=$PATH:$ANDROID_SDK/tools:$ANDROID_SDK/platform-tools
+}
+
+function ssh-reagent {
+    for agent in /tmp/ssh-*/agent.*; do
+        export SSH_AUTH_SOCK=$agent
+        if ssh-add -l 2>&1 > /dev/null; then
+            echo Found working SSH Agent:
+            ssh-add -l
+            return
+        fi
+    done
+    echo Cannot find ssh agent - maybe you should reconnect and forward it?
+}
+
+# grep through processes
+function psgrep {
+    ps aux | grep -v "grep" | grep "$@"
+}
+
+# kill processes based on a regex
+function kgrep {
+    candidates=`psgrep $@ | awk '{printf "%s ", $2; print substr($0, index($0, $11))}'`
+    echo $candidates
+    echo -n '\nWill be killed (y/N): '
+    read confirm
+    if [ "$confirm" = "y" ]; then
+        echo 'Killing processes'
+        pids=`echo $candidates | awk '{print $1}'`
+        echo $pids | xargs kill
+    fi
+}
+
+# show all box IPs
+function ips () {
+    # determine local IP address
+    ifconfig | grep "inet " | awk '{ print $2 }'
+}
+
+# use same tab in vim
+function runvim() {
+    vim --servername VIM --remote-tab-silent $@
+    #vim --servername VIM --remote-tab-silent $@ && i3-msg "[title=VIM] focus"
+}

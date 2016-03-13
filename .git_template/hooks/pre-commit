@@ -1,0 +1,3 @@
+#!/bin/sh
+
+[ -f tox.ini ] && tox -e pep8

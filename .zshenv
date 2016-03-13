@@ -1,0 +1,3 @@
+# ~/.zshenv
+
+. $HOME/.shell/variables
