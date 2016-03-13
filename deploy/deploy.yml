@@ -1,0 +1,44 @@
+---
+
+- name: Deploy my dotfiles
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+  vars:
+    local_home: "{{ lookup('env', 'HOME') }}"
+    local_user: "{{ lookup('env', 'USER') }}"
+  tasks:
+    - name: Get my group
+      command: "id -g -n {{ local_user }}"
+      register: local_group_cmd
+    - name: Get source directory
+      command: pwd
+      args:
+          chdir: "{{ playbook_dir }}/.."
+      register: pwd_cmd
+    - name: Create dotfile symlinks
+      file:
+        dest: "{{ local_home }}/{{ item }}"
+        src: "{{ pwd_cmd.stdout }}/{{ item }}"
+        #src: "{{ local_home }}/Projects/dstanek/{{ item }}"
+        state: link
+        owner: "{{ local_user }}"
+        group: "{{ local_group_cmd.stdout }}"
+      with_items:
+        # shell
+    #    - .zshrc
+    #    - .zsh.custom
+    #    - .shell
+        # misc
+        - .ansible.cfg
+        - .ctags
+        - .tmux.conf
+    #    - .weechat
+    #    # scripts
+    #    - bin
+        # vcs
+    #    - .gitconfig
+    #    - .git_template
+    #    - .global_gitignore
+    #    - .hgignore
+    #    - .hgrc
